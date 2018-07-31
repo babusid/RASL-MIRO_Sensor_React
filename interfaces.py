@@ -56,8 +56,8 @@ class primary_interface:
             self.eyelid_closure = None
             self.sonar_range = None
             self.light = None
-            self.touch_head = None
-            self.touch_body = None
+            self.touch_head = [0,0,0,0]
+            self.touch_body = [0,0,0,0]
             self.cliff = None
 
             # Actuators
@@ -143,14 +143,6 @@ class primary_interface:
         # Turn at the given velocity in rad/sec
         def turn(self, speed):
             self.update_body_vel(0, speed)
-
-        # Move head joints
-        def head_move(self, lift=0.296705973, yaw=0, pitch=0.295833308, speed=-1):
-            self.body_config = [0, lift, yaw, pitch]
-            self.body_config_speed = [speed, speed, speed, speed]
-
-        def tail_move(self, wag=1):
-            self.tail = wag
 
     ##########################################################################################
     # Stuff below here ensures that only one instance of this class is created for any robot #
