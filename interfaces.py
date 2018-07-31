@@ -5,12 +5,13 @@ from std_msgs.msg import String
 from geometry_msgs.msg import Twist, Pose2D
 from sensor_msgs.msg import Temperature, Imu, JointState, Range
 from nav_msgs.msg import Odometry
-from miro_msgs.msg import platform_control, platform_sensors
 from array import array
-
+from miro_msgs.msg import platform_control, platform_sensors
+import numpy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
+import time
 
 
 # -------------------------------------------------------------------------------------#
@@ -143,6 +144,43 @@ class primary_interface:
         # Turn at the given velocity in rad/sec
         def turn(self, speed):
             self.update_body_vel(0, speed)
+
+        # Move head joints
+        def head_move(self, lift=0.296705973, yaw=0, pitch=0.295833308, speed=-1):
+            self.body_config = [0, lift, yaw, pitch]
+            self.body_config_speed = [speed, speed, speed, speed]
+
+        def tail_move(self, wag=1):
+            self.tail = wag
+
+        def pet_pat(self):
+            self.body_config_speed = [5, 5, 5, 5]
+            if self.touch_body:
+
+                # find average value of body touch
+                try:
+                    # avg body touch algorithm
+                    self.value = 0.0
+                    self.value = numpy.average(self.touch_body)
+                    print (self.touch_body)
+                    print(self.value)
+                except ZeroDivisionError:
+                    self.value = 0
+
+                    if self.value <= 0.5: # governs behavior when PETTED
+                        self.stop_moving()
+                        self.tail_move()
+                        self.body_config = [0, 0, 0, 1]
+                        time.sleep(.5)
+                        self.body_config = [0, 0, 0, 0]
+                    else: # governs behavior when PATTED
+                        self.stop_moving()
+                        self.tail_move(1)
+                        self.body_config = [0, 0, .2, 0]
+                        time.sleep(.25)
+                        self.body_config = [0, 0, -2, 0]
+                        time.sleep(.25)
+                        self.body_config = [0, 0, 0, 0]
 
     ##########################################################################################
     # Stuff below here ensures that only one instance of this class is created for any robot #
