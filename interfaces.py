@@ -167,13 +167,13 @@ class primary_interface:
                 except ZeroDivisionError:
                     self.value = 0
 
-                    if self.value <= 0.5: # governs behavior when PETTED
+                    if 0.5 >= self.value > 0: # governs behavior when PETTED
                         self.stop_moving()
                         self.tail_move()
                         self.body_config = [0, 0, 0, 1]
                         time.sleep(.5)
                         self.body_config = [0, 0, 0, 0]
-                    else: # governs behavior when PATTED
+                    elif self.value > 0.5: # governs behavior when PATTED
                         self.stop_moving()
                         self.tail_move(1)
                         self.body_config = [0, 0, .2, 0]
