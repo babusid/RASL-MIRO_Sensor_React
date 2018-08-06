@@ -4,6 +4,7 @@
 # to allow the default state to be one other than the robot 
 # standing still and to conglomerate as many actions as programmed by James and Jacob
 # Created by Sidharth Babu  7/12/2018
+#default behavior is to move in a circle and react upon touch
 
 from interfaces import *
 
