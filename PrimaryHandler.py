@@ -3,15 +3,11 @@
 # Created by Sidharth Babu  7/12/2018
 # default behavior is to move around whilst avoiding any obstacles and reacting to touch
 
-from interfaces import *
-
-import rospy
-from std_msgs.msg import String
-from miro_msgs.msg import platform_mics, platform_sensors
-from array import array
-import time
 import math
-from sound_test import sound_test
+import time
+import rospy
+
+from interfaces import *
 
 
 class SecondaryInterface:
@@ -24,14 +20,16 @@ class SecondaryInterface:
     def defaultmovestate(self):
         # utilizes the sonar sensors so that
         # the robot can move around without hitting things
-
+        self.pint.ear_rotate = [1, 0]  # move one ear
         self.pint.head_move(0, .2)  # turn to left side
         time.sleep(.2)
         x = self.pint.sonar_range  # left side turn range value
         time.sleep(.2)
         self.pint.head_move()  # set to middle
+        self.pint.ear_rotate = [0, 0]  # set ears to normal
         time.sleep(.2)
-        self.pint.head_move(0, -.2)  # turn to right side4
+        self.pint.head_move(0, -.2)  # turn to right side
+        self.pint.ear_rotate = [0, 1]  # move other ear
         time.sleep(.2)
         y = self.pint.sonar_range  # right side turn range value
         time.sleep(.2)
@@ -46,6 +44,8 @@ class SecondaryInterface:
                 self.pint.tail_move(-1)
                 self.pint.drive_straight(-.2)
                 time.sleep(2)
+                self.pint.turn(math.pi)
+                time.sleep(1)
                 self.pint.stop_moving()
                 self.pint.tail_move(0)
 
