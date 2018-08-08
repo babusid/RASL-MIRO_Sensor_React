@@ -118,7 +118,7 @@ class primary_interface:
             for flag in self.relevant_flags:
                 flag.update()
 
-        ### Methods to simplify locomotion ###
+        ### Methods to simplify development ###
 
         # Updates the body_vel to the specified values (in m/s and rad/sec)
         def update_body_vel(self, linear, angular):
@@ -152,6 +152,14 @@ class primary_interface:
 
         def tail_move(self, wag=1):
             self.tail = wag
+
+        def head_nod_sideways(self,yaw=.2):
+            self.body_config = [0, 0, yaw, 0]
+            time.sleep(.25)
+            self.body_config = [0, 0, -yaw, 0]
+            time.sleep(.25)
+            self.head_move()
+
 
         def pet_pat(self):
             self.body_config_speed = [5, 5, 5, 5]
